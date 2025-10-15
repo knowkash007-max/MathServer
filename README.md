@@ -33,116 +33,121 @@ Publish the website in the given URL.
 
 ## PROGRAM :
 '''
-math.html
+math.html 
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Power Calculator</title>
-    <style>
-        body {
-    background-color: red;
-    font-family: Arial, sans-serif;
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<title>Area of Surface</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<style type="text/css">
+body {
+    background-color: #00ff11;
+}
+.edge {
+    width: 100%;
+    padding-top: 250px;
     text-align: center;
 }
-
-.container {
-    background-color: blue;
-    border: 5px dashed green;
-    width: 400px;
-    padding: 30px;
-    margin: 100px auto;
-    color: white;
-    border-radius: 10px;
+.box {
+    display: inline-block;
+    border: thick dashed #ffffff;
+    width: 500px;
+    min-height: 300px;
+    font-size: 20px;
+    background-color: rgb(23, 53, 222);
 }
-
+.formelt {
+    color: rgb(9, 10, 11);
+    text-align: center;
+    margin-top: 7px;
+    margin-bottom: 6px;
+}
 h1 {
-    color: pink;
+    color: rgb(227, 176, 11);
+    padding-top: 20px;
 }
 
-input[type="text"] {
-    width: 100px;
-    padding: 5px;
-    margin-left: 10px;
-}
-
-input[type="submit"] {
-    padding: 5px 15px;
-    background-color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-input[type="submit"]:hover {
-    background-color: lightgray;
-}
-
-    </style>
+</style>
 </head>
 <body>
-    <h1>Incandescent Bulb Power Calculator</h1>
-
-    <form method="post">
-        {% csrf_token %}
-        <label for="current">Current (I) in Amps:</label>
-        <input type="text" id="current" name="current" required><br><br>
-
-        <label for="resistance">Resistance (R) in Ohms:</label>
-        <input type="text" id="resistance" name="resistance" required><br><br>
-
-        <input type="submit" value="Calculate Power">
-    </form>
-
-    {% if result is not None %}
-        <h2>Power (P) = {{ result }} Watts</h2>
-    {% endif %}
-
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+<div class="edge">
+    <div class="box">
+        <h1>Surface area of a Right Cylinder</h1>
+   <form method="POST">
+            {% csrf_token %}
+            <div class="formelt">
+                Radius: <input type="text" name="radius" value="{{r}}">m<br/>
+            </div>
+            <div class="formelt">
+                Height: <input type="text" name="height" value="{{h}}">m<br/>
+            </div>
+            <div class="formelt">
+                <input type="submit" value="Calculate"><br/>
+            </div>
+            <div class="formelt">
+                Area: <input type="text" name="area" value="{{area}}">m<sup>2</sup><br/>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
+
 
 views.py
 
 from django.shortcuts import render
 
-def calculate_power(request):
-    result = None
-    error = None
-
+def surfacearea(request):
+    context = {}
+    context['area'] = "0"
+    context['r'] = "0"
+    context['h'] = "0"
+    
     if request.method == 'POST':
-        try:
-            current = float(request.POST.get('current'))
-            resistance = float(request.POST.get('resistance'))
-            power = (current ** 2) * resistance
-            result = round(power, 2)
-        except (ValueError, TypeError):
-            error = "Invalid input. Please enter valid numbers."
+        print("POST method is used")
+        
+        print('request.POST:', request.POST)
+        
+        r = request.POST.get('radius', '0') 
+        h = request.POST.get('height', '0') 
+        print('radius =', r)
+        print('height =', h)
+        
+        area = 2 * 3.14 * int(r) * int(h) + 2*3.14*int(r)*int(r)
+        context['area'] = area
+        context['r'] = r
+        context['h'] = h
+        print('Area =', area)
+    
+    return render(request, 'mathapp/math.html', context)
 
-    return render(request, 'mathapp/math.html', {'result': result, 'error': error})
 
-urls.py 
+urls.py
 
 from django.contrib import admin
 from django.urls import path
 from mathapp import views
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.calculate_power, name='calculate_power'),
+    path('areaofsurface/',views.surfacearea,name="areaofsurface"),
+    path('',views.surfacearea,name="areaofsurfaceroot")
 ]
 
+'''
 
 '''
 
 ## SERVER SIDE PROCESSING:
-![alt text](<Screenshot 2025-10-08 165741.png>)
+![mathaserver image 1 jpg](https://github.com/user-attachments/assets/a1ca47c0-e037-4d6e-833a-9d1965a811d6)
 
 ## HOMEPAGE:
+![mathserver image 2](https://github.com/user-attachments/assets/d679d155-0969-4b82-88a2-42a451bce1c2)
 
-![alt text](<Screenshot 2025-10-08 165715.png>)
+
 
 ## RESULT:
 The program for performing server side processing is completed successfully.
