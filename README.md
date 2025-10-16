@@ -99,12 +99,12 @@ h1 {
 
 views.py
 
-from django.shortcuts import render
-
-def surfacearea(request):
+from django.def surfacearea(request):
     context = {}
     context['area'] = "0"
     context['r'] = "0"
+shortcuts import render
+
     context['h'] = "0"
     
     if request.method == 'POST':
